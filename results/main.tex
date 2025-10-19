@@ -1,0 +1,160 @@
+\documentclass{article}
+\usepackage{graphicx}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2022
+
+
+% ready for submission
+% \usepackage{neurips_2022}
+
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2022}
+
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+    \usepackage[final]{neurips_2022}
+    
+
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2022}
+
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{color,soul}
+\usepackage{hyperref}
+
+
+\title{Final Homework (HW 5) Write-up}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{%
+  Jnana  Preeti Parlapalli \\
+  Data Science Department\\
+  Texas A$\&$M University\\
+  College Station, TX 77845 \\
+  \texttt{pj.preeti@tamu.edu} \\
+}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+  This project addresses a multimodal dataset consisting of handwritten digit images paired with corresponding audio samples. The objective is to develop a model capable of predicting the digit label for each sample by combining both image and audio data. The dataset contains images of handwritten digits along with corresponding audio recordings. The task is to predict the digit label (0-9) for each sample using both image and audio features. Initially, two separate encoder models are constructed for processing and  Concatenate() combines them. The t-SNE is implemented to visualize the embeddings of image and audio encoder. Also, k-means clustering is used to extract clusters associated with digit labels, and homogeneity score and confusion matrices are used to check their validity. Finally, we train the model using hyperparameter tuning to find the best combination of hyperparameters (learning rate = 0.001 , batch size = 32 , optimizer: SGD). The model is trained on the best set of hyperparameters, and then this model is used to predict labels for unseen test data and save the predicted probabilities in a file (.csv). By successfully predicting digit labels using both image and audio features, the model showcases the potential for using multiple modalities to improve prediction accuracy.
+\end{abstract}
+
+
+\section{Introduction}
+
+The problem tackled here involves multi-modal data analysis, specifically images and audio, with the goal of classification. To achieve this, a deep learning approach is employed. Initially, the data is preprocessed, and separate encoders are defined for both image and audio inputs. These encoders transform the raw data into meaningful feature representations.
+
+The process starts by splitting the training data into subsets for validation purposes. Then, the image and audio encoders are applied to their respective training data, producing embeddings. These embeddings are visualized using t-SNE to gain insights into their distributions and relationships. Additionally, KMeans clustering is applied to both image and audio embeddings to assess their separability. The homogeneity score is calculated to evaluate the consistency of clusters with the ground truth labels.
+
+Next, a combined encoder is constructed by concatenating the outputs of the image and audio encoders. This combined encoder is used as part of a classification model. Hyperparameters, including learning rates, batch sizes, and optimizers are tuned using a grid search combined with cross-validation to optimize model performance and find the best combination of hyperparameters.
+
+Using the best hyperparameters, a combined model is trained on the training set. Finally, the trained model is utilized to predict labels for the test data, and the results are saved to a CSV file for submission. This approach implements deep learning techniques to effectively integrate information from multiple modalities for classification tasks.
+
+ Techniques such as fusion of multi-modal features(like Multimodal Audio-Image and Video Action Recognizer (MAiVAR), deep learning-based multi-modal learning, and joint embedding spaces have been explored in various domains. Exploring such related work  provide additional insights and improvements to the current approach.
+
+\section{Your Method}
+
+The methodology involves initial data preprocessing, where raw image and audio data are loaded, reshaped, and split into training and validation sets. Clustering analysis aids in understanding the data distribution. Hyperparameter tuning optimizes model performance using nested for-loops (grid search) over learning rates, batch sizes, and optimizers. Training a combined model utilizes the extracted features and dense layers to classify multi-modal data . Evaluation on the validation set guides model refinement, and predictions on the test data are made for submission.
+\subsection{Data Preprocessing}
+
+For pre-processing the data, the process of loading, reshaping, and splitting the data is integral to preparing it for subsequent modeling tasks. Firstly, the data, comprising both image and audio inputs along with their corresponding labels, is loaded from files. Once loaded, the image and audio data are reshaped to conform to the expected input shape of the encoder models, ensuring consistency and compatibility during model training. This reshaping step is facilitated by numpy's $`reshape()`$ function. Following reshaping, the data is partitioned into training and validation sets. This division enables the model to be trained on a subset of the data while retaining another subset for validation, crucial for assessing model performance and generalization. By systematically organizing the data in this manner, the preprocessing stage establishes a solid foundation for subsequent model development and evaluation.
+
+\subsection{Model Design}
+
+The provided code implements a multimodal deep learning model for digit classification using both image and audio data. It begins by preprocessing the data and extracting embeddings from the image and audio inputs using separate encoder networks. Visualization techniques such as t-SNE are employed to understand the distribution of embeddings in a lower-dimensional space. Clustering is then performed on the embeddings to assess their separability. Subsequently, a combined model is constructed by concatenating the encoder outputs and adding fully connected layers for classification. Hyperparameters are tuned using grid search, and the model is trained with the best configurations. Finally, predictions are made on the test set, and the results are saved for submission. By employing deep learning techniques, it automatically extracts important features from the raw data, potentially improving its ability to accurately classify digits. This approach offers a more thorough analysis of the input data, which could lead to enhanced classification performance compared to relying solely on one type of data.
+
+\subsection{Model Training}
+
+The provided code snippet outlines a comprehensive process for model training and hyperparameter tuning. Initially, the architecture of the model is defined, incorporating separate encoder networks for processing image and audio inputs, followed by dense layers for classification. Subsequently, a systematic hyperparameter tuning procedure is implemented, iterating through various combinations of learning rates, batch sizes, and optimizers. For each combination, the model is compiled and trained on a training dataset while monitoring validation accuracy. Upon completion of the tuning process, the best-performing hyperparameters are identified based on validation accuracy. A new model (best model) is then constructed using these optimal hyperparameters and trained on the entire training dataset. This meticulously designed approach aims to enhance the model's performance by systematically exploring and selecting the most effective hyperparameter configuration. Finally, the trained model with the best hyperparameters is ready for deployment or further evaluation on new data, showcasing an approach to model optimization and training.
+\subsection{Hyperparameter Tuning}
+
+In the provided code, hyperparameters for a neural network model are tuned systematically through a grid search approach. This involves iterating over predefined sets of values for the learning rate [= $0.01, 0.001$] , batch size hyperparameters [= $32, 64$], and optimizers [= Adam, SGD]. For each combination of hyperparameters, the model is compiled, trained on the training data, and evaluated on the validation set. After a fixed number of epochs (= 10), the validation accuracy is recorded and compared to the best validation accuracy found so far. If the current combination of hyperparameters leads to an improvement in validation accuracy, the best validation accuracy is updated, along with the corresponding hyperparameters. Once the best hyperparameters [learning rate = $0.001$, batch size = $32$, optimizer = SGD]  are identified, the model is re-trained using these optimal values. Finally, the performance of the tuned model is evaluated on the test set to assess its generalization ability. This systematic approach allows for the exploration of different hyperparameter combinations, ultimately aiming to improve the model's performance on unseen data.
+
+
+\section{Results}
+The prediction score achieved on Kaggle is : 0.969
+
+After performing k-means clustering on the image and audio embeddings, most of the data points are in their accurate cluster (label) in the k-means on image embeddings , which is not the same case in audio clustering due to its lower homogeneity score. 
+
+Below are few of the visualizations from the project.
+
+\begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\linewidth]{tSNE_image.png}
+        \caption{tSNE image embeddings}
+        \label{fig:enter-label}
+\end{figure}
+    
+\begin{figure}
+        \centering
+        \includegraphics[width=0.5\linewidth]{tSNE audio embeddings.png}
+        \caption{tSNE audio embeddings}
+        \label{fig:enter-label}
+\end{figure}
+    
+\begin{figure} 
+        \centering
+        \includegraphics[width=0.5\linewidth]{Image k-means- conf_matrix.png}
+        \caption{Confusion matrix (k-means: Image embeddings)}
+        \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}
+        \centering
+        \includegraphics[width=0.5\linewidth]{audio k-means-conf-matrix-1.png}
+        \caption{Confusion matrix (k-means: Audio embeddings)}
+        \label{fig:enter-label}
+\end{figure}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+
+
+\section{Conclusion}
+
+In conclusion, the multimodal learning approach presented in this study showcases the fusion of image and audio data streams for digit classification. By combining multiple modalities, the model gains a richer understanding of the input data, leading to enhanced classification accuracy. The trained model achieves a good performance, as evidenced by the validation accuracy and the predictions made on the test data. Visualization and clustering of embeddings provide insights into the learned feature space, highlighting the model's ability to discriminate between different digit classes. 
+
+However, to further improve the model's performance, several aspects could be addressed. Exploration of more fusion techniques beyond simple concatenation, such as attention mechanisms will improve performance.Also, advanced regularization techniques and larger model architectures could mitigate overfitting and potentially improve generalization performance.
+By addressing these aspects, the model could achieve even higher classification accuracy and robustness in real-world scenarios.
+
+
+\end{document}
