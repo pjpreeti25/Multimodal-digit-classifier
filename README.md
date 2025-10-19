@@ -60,10 +60,9 @@ multimodal-digit-classifier/
 
 ## Architecture Overview
 
-### Model Architecture
+```
 The project implements a **dual-encoder architecture** with concatenation-based fusion for multimodal digit classification:
 
-```
 Image Input (28×28) → Image Encoder → Image Embedding (64-dim)
                                     ↓
 Audio Input (507-dim) → Audio Encoder → Audio Embedding (64-dim)
